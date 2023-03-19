@@ -1,38 +1,64 @@
-# python3
+#python
+import sys
 
 
-def build_heap(data):
+def build_heap(data, n):
     swaps = []
-    # TODO: Creat heap and heap sort
-    # try to achieve  O(n) and not O(n2)
+ 
+    def heapify(i):
+        nonlocal swaps
 
+        smallest = i
+        left = 2 * i + 1
+        right = 2 * i + 2
+
+        if left < n and data[left] < data[smallest]:
+            smallest = left
+
+        if right < n and data[right] < data[smallest]:
+            smallest = right
+
+        if smallest != i:
+            data[i], data[smallest] = data[smallest], data[i]
+            swaps.append((i, smallest))
+            heapify(smallest)
+
+    for i in range(n // 2, -1, -1):
+        heapify(i)
 
     return swaps
 
 
 def main():
-    
-    # TODO : add input and corresponding checks
-    # add another input for I or F 
-    # first two tests are from keyboard, third test is from a file
+  
+    input_method = input().strip()
+    if input_method.startswith("I"):
+        # Input from keyboard
+        n = int(input())
+        data = list(map(int, input().split()))
+    elif input_method.startswith("F"):
+        print("File path:")
+        file_name = input().strip()
+        file_path = "./tests/"
+        if "a" not in file_name:
+            with open(file_path + file_name, mode="r") as file:
+                n = int(file.readline())
+                data = list(map(int, file.readline().split()))
+        else:
+            exit()
+    else:
+        exit()
 
 
-    # input from keyboard
-    n = int(input())
-    data = list(map(int, input().split()))
-
-    # checks if lenght of data is the same as the said lenght
-    assert len(data) == n
-
-    # calls function to assess the data 
-    # and give back all swaps
-    swaps = build_heap(data)
-
-    # TODO: output how many swaps were made, 
-    # this number should be less than 4n (less than 4*len(data))
+    assert len(data) == n, "Entered length must be the same as the actual length of the array"
 
 
-    # output all swaps
+    swaps = build_heap(data, n)
+
+
+    assert len(swaps) <= 4 * n, "The number of swaps exceeds the limit."
+
+  
     print(len(swaps))
     for i, j in swaps:
         print(i, j)
@@ -40,3 +66,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
